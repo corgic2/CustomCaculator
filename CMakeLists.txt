@@ -1,7 +1,24 @@
 cmake_minimum_required(VERSION 3.10)
 project(CustomCaculator)
+
 set(TARGET_NAME CustomCaculator)
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CustomCaculator)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
+
+# Qt，开启Qt代码自动生成
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+
+# 设置Qt路径
+set(QTDIR "D:/Qt/5.15.2/msvc2019_64")
+
+# 将Qt路径添加到CMAKE_PREFIX_PATH
+list(APPEND CMAKE_PREFIX_PATH ${QTDIR})
+
+# 查找Qt5模块
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets)
 
 # Enable debugging symbols
 set(CMAKE_BUILD_TYPE Debug)
@@ -10,7 +27,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 # 启用C++11
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 # 解决节数超过对象文件格式限制
 add_compile_options(-bigobj)
 
@@ -26,13 +43,16 @@ MESSAGE(STATUS "PLATFORM_CPU: ${PLATFORM_CPU}")
 if(${PLATFORM_CPU} STREQUAL "x64")
     SET(EXECUTE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/x64/)
 else()
-    SET(EXECUTE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Win32/)
+    SET(EXECUTE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/x86/)
 endif()
-
-aux_source_directory(. DIR_SRCS)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXECUTE_OUTPUT_PATH})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXECUTE_OUTPUT_PATH})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${EXECUTE_OUTPUT_PATH})
 
-add_executable(CustomCaculator ${HEADER_FILES} ${DIR_SRCS})
+aux_source_directory(. DIR_SRCS)
+
+add_executable(${TARGET_NAME} ${DIR_SRCS})
+
+# 链接Qt模块
+target_link_libraries(${TARGET_NAME} Qt5::Core Qt5::Widgets)
