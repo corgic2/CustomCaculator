@@ -50,9 +50,22 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXECUTE_OUTPUT_PATH})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXECUTE_OUTPUT_PATH})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${EXECUTE_OUTPUT_PATH})
 
-aux_source_directory(. DIR_SRCS)
+# 收集文件 ---------------------------------------------------------
+file(GLOB ROOT_SRCS "*.cpp" "*.h")  # 根目录文件（如果有）
+file(GLOB MAIN_SRCS "Main/*.cpp" "Main/*.h")
+file(GLOB UIMODULE_SRCS "UIModule/*.cpp" "UIModule/*.h" "UIModule/*.ui")
 
-add_executable(${TARGET_NAME} ${DIR_SRCS})
+# 创建分组 ---------------------------------------------------------
+source_group("Root" FILES ${ROOT_SRCS})
+source_group("Main" FILES ${MAIN_SRCS})
+source_group("UIModule" FILES ${UIMODULE_SRCS})
 
-# 链接Qt模块
+# 添加可执行文件 ---------------------------------------------------
+add_executable(${TARGET_NAME}
+    ${ROOT_SRCS}
+    ${MAIN_SRCS}
+    ${UIMODULE_SRCS}
+)
+
+# 链接 Qt 库 -------------------------------------------------------
 target_link_libraries(${TARGET_NAME} Qt5::Core Qt5::Widgets)
