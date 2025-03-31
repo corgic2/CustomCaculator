@@ -1,38 +1,21 @@
-@REM CMake build
+@ECHO OFF
+set CURDIR=%~dp0
 md build
-cd build && cmake .. 
-
-@echo off
-setlocal enabledelayedexpansion
-
-:: 获取当前目录
-set "CURRENT_DIR=%~dp0"
-set "SOURCE_DIR=%CURRENT_DIR%"
-
-:: 进入构建目录并运行 CMake
-echo Generating Visual Studio solution...
-cmake -G "Visual Studio 17 2022" ..
-
-:: 检查 CMake 是否成功
-if %ERRORLEVEL% neq 0 (
-    echo CMake failed to generate the solution.
-    pause
-    exit /b 1
-)
-
-echo Solution generated successfully.
-
-:: 编译项目
-echo Building the project...
+cd build
+cmake -DCMAKE_CONFIGURATION_TYPES=Release .. -G "Visual Studio 17 2022"
 cmake --build . --config Release
 
-:: 检查编译是否成功
-if %ERRORLEVEL% neq 0 (
-    echo Build failed.
-    pause
-    exit /b 1
+@REM windeployqt
+if defined QT_DIR (
+    set QTDIR=%QT_DIR%
+) else (
+    set QTDIR=D:/Qt/5.15.2/msvc2019_64
 )
-
-echo Build completed successfully.
-
+cd %CURDIR%
+set OUTPUTDIR=%~dp0\x64\Release
+cd %OUTPUTDIR%
+for /f %%I in ('dir /b *.exe *.dll') do (
+    %QTDIR%\bin\windeployqt.exe --dir %OUTPUTDIR% --libdir %OUTPUTDIR% --plugindir %OUTPUTDIR% --no-translations %OUTPUTDIR%\%%~nxI
+)
+cd %CURDIR%
 pause
