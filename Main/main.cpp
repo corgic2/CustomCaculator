@@ -1,6 +1,10 @@
-#include <iostream>
+﻿#include <QApplication>
+#include "../UIModule/CustomCaculator.h"
 
-int main() {
-	std::cout << "Hello, World!" << '\n';
-	return 0;
+int main(int argc, char* argv[])
+{
+    QApplication app(argc, argv);
+    CustomCaculator demo;
+    demo.show();
+    return app.exec();
 }

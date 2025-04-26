@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QWidget>
 #include "ui_CustomCaculator.h"
@@ -9,12 +9,12 @@ QT_END_NAMESPACE
 
 class CustomCaculator : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	CustomCaculator(QWidget *parent = nullptr);
-	~CustomCaculator();
+    CustomCaculator(QWidget* parent = nullptr);
+    ~CustomCaculator() override;
 
 private:
-	Ui::CustomCaculatorClass * ui = new Ui::CustomCaculatorClass();
+    Ui::CustomCaculatorClass* ui = new Ui::CustomCaculatorClass();
 };
